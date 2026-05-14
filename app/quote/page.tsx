@@ -6,6 +6,7 @@ import { FormInput } from "@/components/FormInput";
 import { PageHeader } from "@/components/PageHeader";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ServiceSelect } from "@/components/ServiceSelect";
+import { ServicePlanOptions } from "@/components/ServicePlanOptions";
 import { BUSINESS_ID, createQuoteRequest, getServices } from "@/lib/api";
 import { saveQuote } from "@/lib/storage";
 import type { QuoteResponse, Service, ServiceType } from "@/types";
@@ -35,12 +36,12 @@ export default function QuotePage() {
     try {
       const response = await createQuoteRequest({
         business_id: BUSINESS_ID,
-        customer_name: customerName,
-        email,
-        phone,
+        customer_name: customerName.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
         service_type: serviceType,
-        message,
-        address_zip: addressZip,
+        message: message.trim(),
+        address_zip: addressZip.trim(),
       });
       saveQuote(response);
       setQuote(response);
@@ -54,11 +55,11 @@ export default function QuotePage() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-2xl">
-        <PageHeader title="Get a Quote" description="Tell us what you need and we will estimate the service price." />
+        <PageHeader title="Get a Quote" description="Tell Hawkins Pro Mounting what you need and we will estimate the service price." />
         <form className="grid gap-4 rounded border border-line bg-white p-4 shadow-soft" onSubmit={handleSubmit}>
-          <FormInput label="Name" name="customer_name" value={customerName} onChange={setCustomerName} required />
-          <FormInput label="Email" name="email" type="email" value={email} onChange={setEmail} />
-          <FormInput label="Phone" name="phone" type="tel" value={phone} onChange={setPhone} />
+          <FormInput label="Name" name="customer_name" value={customerName} onChange={setCustomerName} placeholder="Jane Customer" required />
+          <FormInput label="Email" name="email" type="email" value={email} onChange={setEmail} placeholder="jane@example.com" required />
+          <FormInput label="Phone" name="phone" type="tel" value={phone} onChange={setPhone} placeholder="(555) 123-4567" required />
           <ServiceSelect value={serviceType} onChange={setServiceType} />
           {selectedService ? (
             <div className="rounded border border-line bg-slate-50 p-3 text-sm text-slate-600">
@@ -68,11 +69,12 @@ export default function QuotePage() {
               {selectedService.description ? <p>{selectedService.description}</p> : null}
             </div>
           ) : null}
-          <FormInput label="ZIP code" name="address_zip" value={addressZip} onChange={setAddressZip} />
-          <FormInput label="Message" name="message" value={message} onChange={setMessage} multiline />
+          <FormInput label="ZIP code" name="address_zip" value={addressZip} onChange={setAddressZip} placeholder="28202" required />
+          <FormInput label="Message" name="message" value={message} onChange={setMessage} placeholder="Tell us about the wall type, item size, or any special instructions." multiline />
           {error ? <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div> : null}
-          <PrimaryButton isLoading={isLoading} disabled={!customerName.trim()} type="submit">Submit Quote Request</PrimaryButton>
+          <PrimaryButton isLoading={isLoading} disabled={!customerName.trim() || !email.trim() || !phone.trim() || !addressZip.trim()} type="submit">Submit Quote Request</PrimaryButton>
         </form>
+        <div className="mt-5"><ServicePlanOptions /></div>
         {quote ? <div className="mt-5"><EstimateCard quote={quote} service={selectedService} /></div> : null}
       </div>
     </main>

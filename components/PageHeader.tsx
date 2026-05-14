@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 type PageHeaderProps = {
@@ -11,8 +10,11 @@ export function PageHeader({ title, description }: PageHeaderProps) {
     <header className="mb-6">
       <nav className="mb-6 flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/noviq-logo.png" alt="Noviq" width={36} height={36} className="rounded" />
-          <span className="text-sm font-semibold text-ink">Noviq</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded bg-brand text-sm font-bold text-white">HP</div>
+          <div>
+            <span className="block text-sm font-semibold text-ink">Hawkins Pro Mounting</span>
+            <span className="block text-xs text-slate-500">Powered by Noviq</span>
+          </div>
         </Link>
         <div className="flex items-center gap-2 text-sm font-medium text-slate-600">
           <Link href="/quote" className="rounded px-3 py-2 hover:bg-slate-100">Quote</Link>

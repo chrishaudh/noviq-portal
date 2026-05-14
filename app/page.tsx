@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getBusiness, getBusinessSettings } from "@/lib/api";
+import { ServicePlanOptions } from "@/components/ServicePlanOptions";
 import type { Business, BusinessSettings } from "@/types";
 
 export default function HomePage() {
@@ -15,7 +15,7 @@ export default function HomePage() {
     getBusinessSettings().then(setSettings).catch(() => setSettings(null));
   }, []);
 
-  const businessName = business?.name ?? "Noviq";
+  const businessName = cleanBusinessName(business?.name) ?? "Hawkins Pro Mounting";
   const hours = settings ? `${formatHour(settings.business_start_hour)} - ${formatHour(settings.business_end_hour)}` : "Business hours available during booking";
 
   return (
@@ -23,8 +23,11 @@ export default function HomePage() {
       <section className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-between px-4 py-6 sm:px-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/noviq-logo.png" alt="Noviq" width={40} height={40} className="rounded" />
-            <span className="font-semibold text-ink">{businessName}</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded bg-brand text-sm font-bold text-white">HP</div>
+            <div>
+              <span className="block font-semibold text-ink">{businessName}</span>
+              <span className="block text-xs text-slate-500">Powered by Noviq</span>
+            </div>
           </div>
           <Link href="/book" className="rounded border border-line bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-soft">Book</Link>
         </nav>
@@ -34,7 +37,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-normal text-brand">Service booking made simple</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-normal text-ink sm:text-5xl">Book trusted home services with {businessName}.</h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              This Noviq-powered portal helps you review services, request quotes, choose available times, and submit booking requests from any device.
+              Request a quote, choose an available appointment window, and send service details directly to the Hawkins Pro Mounting team.
             </p>
             <div className="mt-8 grid gap-3 sm:max-w-md sm:grid-cols-2">
               <Link href="/quote" className="flex h-12 items-center justify-center rounded bg-brand px-5 text-base font-semibold text-white">Get a Quote</Link>
@@ -42,8 +45,12 @@ export default function HomePage() {
             </div>
           </div>
           <div className="rounded border border-line bg-white p-5 shadow-soft">
-            <div className="aspect-[4/3] overflow-hidden rounded bg-slate-100">
-              <Image src="/noviq-logo.png" alt="Noviq service portal" width={640} height={480} className="h-full w-full object-contain p-10" priority />
+            <div className="flex aspect-[4/3] items-center justify-center rounded bg-slate-100 p-8 text-center">
+              <div>
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded bg-brand text-xl font-bold text-white">HP</div>
+                <p className="mt-4 text-lg font-semibold text-ink">Hawkins Pro Mounting</p>
+                <p className="mt-2 text-sm text-slate-500">Mounting, hanging, shelving, curtains, and blinds</p>
+              </div>
             </div>
             <div className="mt-5 grid gap-3 text-sm text-slate-600">
               <p className="font-medium text-ink">What you can do here</p>
@@ -55,6 +62,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <ServicePlanOptions />
       </section>
     </main>
   );
@@ -64,4 +72,10 @@ function formatHour(hour: number) {
   const suffix = hour >= 12 ? "PM" : "AM";
   const normalized = hour % 12 === 0 ? 12 : hour % 12;
   return `${normalized}:00 ${suffix}`;
+}
+
+
+function cleanBusinessName(value: string | null | undefined) {
+  if (!value || value.trim().toLowerCase() === "string") return null;
+  return value;
 }
