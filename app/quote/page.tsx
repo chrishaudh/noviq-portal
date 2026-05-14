@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { EstimateCard } from "@/components/EstimateCard";
 import { FormInput } from "@/components/FormInput";
 import { PageHeader } from "@/components/PageHeader";
@@ -22,6 +22,7 @@ export default function QuotePage() {
   const [services, setServices] = useState<Service[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const estimateRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     getServices().then(setServices).catch(() => setServices([]));
@@ -45,6 +46,7 @@ export default function QuotePage() {
       });
       saveQuote(response);
       setQuote(response);
+      window.setTimeout(() => estimateRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not submit quote request.");
     } finally {
@@ -73,9 +75,9 @@ export default function QuotePage() {
           <FormInput label="Message" name="message" value={message} onChange={setMessage} placeholder="Tell us about the wall type, item size, or any special instructions." multiline />
           {error ? <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div> : null}
           <PrimaryButton isLoading={isLoading} disabled={!customerName.trim() || !email.trim() || !phone.trim() || !addressZip.trim()} type="submit">Submit Quote Request</PrimaryButton>
+          {quote ? <div ref={estimateRef} className="rounded border-2 border-teal-300 bg-teal-50 p-1 shadow-soft"><EstimateCard quote={quote} service={selectedService} /></div> : null}
         </form>
         <div className="mt-5"><ServicePlanOptions /></div>
-        {quote ? <div className="mt-5"><EstimateCard quote={quote} service={selectedService} /></div> : null}
       </div>
     </main>
   );

@@ -15,7 +15,10 @@ export default function HomePage() {
     getBusinessSettings().then(setSettings).catch(() => setSettings(null));
   }, []);
 
-  const businessName = cleanBusinessName(business?.name) ?? "Hawkins Pro Mounting";
+  const businessName = cleanBusinessName(settings?.business_display_name) ?? cleanBusinessName(business?.name) ?? "Hawkins Pro Mounting";
+  const bookingTitle = settings?.public_booking_title || `Book trusted home services with ${businessName}.`;
+  const bookingSubtitle = settings?.public_booking_subtitle || "Request a quote, choose an available appointment window, and send service details directly to the team.";
+  const poweredByEnabled = settings?.powered_by_noviq_enabled ?? true;
   const hours = settings ? `${formatHour(settings.business_start_hour)} - ${formatHour(settings.business_end_hour)}` : "Business hours available during booking";
 
   return (
@@ -26,7 +29,7 @@ export default function HomePage() {
             <div className="flex h-10 w-10 items-center justify-center rounded bg-brand text-sm font-bold text-white">HP</div>
             <div>
               <span className="block font-semibold text-ink">{businessName}</span>
-              <span className="block text-xs text-slate-500">Powered by Noviq</span>
+              {poweredByEnabled ? <span className="block text-xs text-slate-500">Powered by Noviq</span> : null}
             </div>
           </div>
           <Link href="/book" className="rounded border border-line bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-soft">Book</Link>
@@ -35,10 +38,8 @@ export default function HomePage() {
         <div className="grid gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-normal text-brand">Service booking made simple</p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-normal text-ink sm:text-5xl">Book trusted home services with {businessName}.</h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Request a quote, choose an available appointment window, and send service details directly to the Hawkins Pro Mounting team.
-            </p>
+            <h1 className="mt-4 text-4xl font-semibold tracking-normal text-ink sm:text-5xl">{bookingTitle}</h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">{bookingSubtitle}</p>
             <div className="mt-8 grid gap-3 sm:max-w-md sm:grid-cols-2">
               <Link href="/quote" className="flex h-12 items-center justify-center rounded bg-brand px-5 text-base font-semibold text-white">Get a Quote</Link>
               <Link href="/book" className="flex h-12 items-center justify-center rounded border border-line bg-white px-5 text-base font-semibold text-slate-800">Book Now</Link>

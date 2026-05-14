@@ -11,7 +11,7 @@ export function EstimateCard({ quote, service }: EstimateCardProps) {
   const duration = service?.estimated_duration_minutes ?? service?.duration_minutes;
   return (
     <section className="rounded border border-teal-200 bg-teal-50 p-4">
-      <p className="text-sm font-medium text-teal-800">Estimated price</p>
+      <p className="text-sm font-medium text-teal-800">Quote estimate for {quote.service_type}</p>
       <p className="mt-2 text-3xl font-semibold text-teal-950">{formatCurrency(quote.estimated_price)}</p>
       {duration ? <p className="mt-2 text-sm text-teal-900">Estimated duration: {duration} minutes</p> : null}
       {service?.base_price ? <p className="mt-1 text-sm text-teal-900">Configured starting price: {formatCurrency(service.base_price)}</p> : null}

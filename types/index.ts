@@ -77,6 +77,13 @@ export type BusinessSettings = {
   id: string;
   business_id: string;
   timezone: string;
+  business_display_name?: string | null;
+  logo_url?: string | null;
+  primary_color?: string | null;
+  secondary_color?: string | null;
+  public_booking_title?: string | null;
+  public_booking_subtitle?: string | null;
+  powered_by_noviq_enabled?: boolean;
   business_start_hour: number;
   business_end_hour: number;
   sunday_enabled: boolean;

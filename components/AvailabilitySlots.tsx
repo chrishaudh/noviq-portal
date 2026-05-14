@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/lib/format";
+import { formatBusinessDateTime } from "@/lib/format";
 import type { AvailabilitySlot } from "@/types";
 
 type AvailabilitySlotsProps = {
@@ -27,7 +27,7 @@ export function AvailabilitySlots({ slots, selectedStart, onSelect, isLoading }:
           onClick={() => onSelect(slot.start)}
           type="button"
         >
-          {formatDateTime(slot.start)}
+          {formatBusinessDateTime(slot.start)}
         </button>
       ))}
     </div>
