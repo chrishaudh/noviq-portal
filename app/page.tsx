@@ -60,6 +60,12 @@ export default function HomePage() {
               <p>Receive a booking reference for follow-up.</p>
               <p>Hours: {hours}</p>
               <p>{settings?.cancellation_policy ?? "Cancellation policy is shown before confirmation."}</p>
+              <div className="grid gap-2 rounded border border-line bg-slate-50 p-3 text-left">
+                <p className="font-medium text-ink">Why customers use this portal</p>
+                <p>Clear estimate and booking steps.</p>
+                <p>Availability pulled directly from the service schedule.</p>
+                <p>Booking reference saved after submission.</p>
+              </div>
             </div>
           </div>
         </div>

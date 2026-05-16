@@ -22,7 +22,7 @@ export function ServicePlanOptions() {
     <section className="rounded border border-line bg-white p-4 shadow-soft">
       <div className="mb-3">
         <p className="text-sm font-semibold text-ink">Optional service plan options</p>
-        <p className="mt-1 text-sm text-slate-500">Choose a one-time service today, or mention a recurring need in your request.</p>
+        <p className="mt-1 text-sm text-slate-500">Choose a one-time service today, or mention a recurring need so the team can recommend the right maintenance plan.</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {plans.map((plan) => (
@@ -32,7 +32,7 @@ export function ServicePlanOptions() {
           </article>
         ))}
       </div>
-      <p className="mt-3 text-xs text-slate-500">No payment or subscription is required here. These options simply help Hawkins Pro Mounting understand what kind of service you need.</p>
+      <p className="mt-3 text-xs text-slate-500">No payment or subscription is required here. These options simply help Hawkins Pro Mounting understand whether you need one visit or ongoing support.</p>
     </section>
   );
 }
