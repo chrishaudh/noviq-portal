@@ -16,7 +16,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     let message = `Request failed with status ${response.status}`;
     try {
       const body = await response.json();
-      message = typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail ?? body);
+      message = friendlyApiMessage(body.detail ?? body, message);
     } catch {
       // Keep the default message.
     }
@@ -24,6 +24,16 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   }
 
   return (await response.json()) as T;
+}
+
+function friendlyApiMessage(detail: unknown, fallback: string) {
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) return "Please review the required fields and try again.";
+  if (detail && typeof detail === "object" && "message" in detail) {
+    const value = (detail as { message?: unknown }).message;
+    if (typeof value === "string") return value;
+  }
+  return fallback;
 }
 
 export function createQuoteRequest(payload: QuoteRequest) {

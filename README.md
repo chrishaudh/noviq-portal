@@ -1,54 +1,62 @@
 # Noviq Portal
 
-Customer-facing quote and booking portal for Noviq.
+Customer-facing quote and booking portal for local Noviq demos.
 
-## Local Setup
+## Local Backend Dependency
 
-From your terminal:
+Start the FastAPI backend first:
 
 ```bash
-cd ~/Documents/Noviq/noviq-portal
-npm install
-npm run dev
+cd ~/Documents/Noviq/smallbiz-os
+source .venv/bin/activate
+uvicorn app.main:app --reload
 ```
 
-The portal runs at:
-
-```text
-http://localhost:3001
-```
-
-The app expects the FastAPI backend to be running at:
+The portal reads from:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-If you need to change the backend URL, create `.env.local`:
+Override with `.env.local` if needed:
 
-```bash
+```text
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
 ```
 
-## Backend
+## Run The Portal
 
-Start the backend in a separate terminal:
+Use port `3002` when the dashboard is already running on `3000`.
 
 ```bash
-cd ~/Documents/Noviq/smallbiz-os
-uvicorn app.main:app --reload
+cd ~/Documents/Noviq/noviq-portal
+npm install
+npm run dev -- -p 3002
+```
+
+Open:
+
+```text
+http://localhost:3002
 ```
 
 ## Pages
 
-- `/` - landing page
+- `/` - customer-facing landing page
 - `/quote` - quote request form
 - `/book` - booking request form with availability slots
 - `/confirmation` - booking confirmation details
+- `/hawkins-pro-mounting/quote` - future slug-style route placeholder
+- `/precision-lawn-care/quote` - future slug-style route placeholder
+
+## Useful Checks
+
+```bash
+npm run build
+```
 
 ## Notes
 
-- Authentication is not included yet.
-- Stripe payments are not included yet.
-- Supabase/Postgres is not included yet.
-- The portal uses a placeholder `business_id` for local development.
+- Authentication, Stripe payments, Supabase/Postgres, and deployment are intentionally deferred.
+- The current portal uses Hawkins Pro Mounting as the local placeholder business context.
+- If the backend is not running, quote/booking submissions will show friendly error messages.
