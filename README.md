@@ -38,7 +38,11 @@ Override with `.env.local` if needed:
 
 ```text
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+NEXT_PUBLIC_APP_ENV=development
+NEXT_PUBLIC_DEFAULT_BUSINESS_ID=00000000-0000-0000-0000-000000000000
 ```
+
+Copy `.env.example` when preparing local or hosted environments.
 
 ## Pages
 
@@ -60,6 +64,10 @@ The portal stays public/customer-facing. Future hardening can add:
 - bot/spam protection
 
 Do not add dashboard-style staff auth here unless a customer account feature is explicitly planned.
+
+## Deployment Prep
+
+Future portal hosting is expected to use Vercel. Before public traffic, add spam/rate-limit protections and move from a default demo business ID to public business slug resolution. See `../DEPLOYMENT_CHECKLIST.md`.
 
 ## Checks
 

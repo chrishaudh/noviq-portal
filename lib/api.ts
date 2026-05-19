@@ -1,7 +1,8 @@
 import type { AvailabilitySlot, BookingRequest, BookingResponse, Business, BusinessSettings, QuoteRequest, QuoteResponse, Service } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
-export const BUSINESS_ID = "00000000-0000-0000-0000-000000000000";
+export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV ?? "development";
+export const BUSINESS_ID = process.env.NEXT_PUBLIC_DEFAULT_BUSINESS_ID ?? "00000000-0000-0000-0000-000000000000";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
