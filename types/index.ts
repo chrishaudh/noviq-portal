@@ -157,3 +157,17 @@ export type PublicInvoice = {
   updated_at: string;
   security_note?: string;
 };
+
+
+export type PublicQuote = QuoteResponse & {
+  quote_number?: string | null;
+  estimated_duration?: number | null;
+  expiration_date?: string | null;
+  notes?: string | null;
+  customer_message?: string | null;
+  line_items?: Array<{ description: string; quantity: string | number; unit_price: string | number; line_total?: string | number | null; optional_add_on?: boolean }>;
+  approved_at?: string | null;
+  rejected_at?: string | null;
+  converted_booking_id?: string | null;
+  business: { id: string; name: string; logo_url?: string | null; primary_color?: string | null; secondary_color?: string | null; powered_by_noviq_enabled?: boolean };
+};
