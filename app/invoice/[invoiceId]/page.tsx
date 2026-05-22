@@ -56,7 +56,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
     );
   }
 
-  const depositDue = Number(invoice.deposit_amount ?? 0) > Number(invoice.amount_paid ?? 0) && invoice.status !== "paid";
+  const depositDue = Number(invoice.deposit_balance_due ?? 0) > 0 && invoice.status !== "paid";
 
   return (
     <Shell>
@@ -81,7 +81,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
 
           <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
             <Metric label="Subtotal" value={formatCurrency(invoice.subtotal)} />
-            <Metric label="Deposit" value={formatCurrency(invoice.deposit_amount)} />
+            <Metric label="Deposit Status" value={(invoice.deposit_status || "not required").replaceAll("_", " ")} />
             <Metric label="Paid" value={formatCurrency(invoice.amount_paid)} />
             <Metric label="Balance Due" value={formatCurrency(invoice.balance_due)} strong />
           </div>
@@ -92,6 +92,9 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
               <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                 <Detail label="Customer" value={invoice.customer_name || "Customer"} />
                 <Detail label="Due date" value={formatDateTime(invoice.due_date)} />
+                <Detail label="Deposit required" value={formatCurrency(invoice.deposit_required_amount ?? invoice.deposit_amount)} />
+                <Detail label="Deposit paid" value={formatCurrency(invoice.deposit_paid_amount ?? invoice.deposit_amount)} />
+                <Detail label="Deposit due" value={formatCurrency(invoice.deposit_balance_due ?? 0)} />
                 <Detail label="Booking ref" value={invoice.booking?.booking_ref || "-"} />
                 <Detail label="Scheduled time" value={formatDateTime(invoice.booking?.scheduled_start)} />
                 <Detail label="Service" value={invoice.booking?.service_type || invoice.line_items[0]?.service_type || "Service"} />
@@ -101,7 +104,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
 
             <section className="rounded border border-line bg-slate-50 p-4">
               <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Payment Placeholder</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">Online payments are coming soon. For now, contact the business directly to arrange payment.</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Online payments are coming soon. Deposit and balance buttons are placeholders only; no payment will be processed.</p>
               <div className="mt-4 grid gap-2">
                 {depositDue ? <button className="h-11 rounded px-4 text-sm font-semibold text-white" style={{ background: brand.primary }} onClick={() => setPaymentMessage("Online payments coming soon.")} type="button">Pay Deposit</button> : null}
                 <button className="h-11 rounded px-4 text-sm font-semibold text-white" style={{ background: brand.secondary }} onClick={() => setPaymentMessage("Online payments coming soon.")} type="button">Pay Balance</button>

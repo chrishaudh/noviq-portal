@@ -128,6 +128,10 @@ export type PublicInvoice = {
   deposit_amount: string | number;
   amount_paid: string | number;
   balance_due: string | number;
+  deposit_status?: string;
+  deposit_required_amount?: string | number;
+  deposit_paid_amount?: string | number;
+  deposit_balance_due?: string | number;
   due_date?: string | null;
   notes?: string | null;
   business: {
