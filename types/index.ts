@@ -102,3 +102,54 @@ export type Business = {
   email?: string | null;
   website_url?: string | null;
 };
+
+
+export type PublicInvoiceLineItem = {
+  id: string;
+  invoice_id: string;
+  business_id: string;
+  description: string;
+  quantity: string | number;
+  unit_price: string | number;
+  line_total: string | number;
+  service_type?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PublicInvoice = {
+  id: string;
+  invoice_number: string;
+  status: string;
+  customer_name?: string | null;
+  customer_email?: string | null;
+  customer_phone?: string | null;
+  subtotal: string | number;
+  deposit_amount: string | number;
+  amount_paid: string | number;
+  balance_due: string | number;
+  due_date?: string | null;
+  notes?: string | null;
+  business: {
+    id: string;
+    name: string;
+    phone?: string | null;
+    email?: string | null;
+    website_url?: string | null;
+    logo_url?: string | null;
+    primary_color?: string | null;
+    secondary_color?: string | null;
+    powered_by_noviq_enabled?: boolean;
+  };
+  booking?: {
+    id?: string | null;
+    booking_ref?: string | null;
+    service_type?: string | null;
+    scheduled_start?: string | null;
+    address?: string | null;
+  } | null;
+  line_items: PublicInvoiceLineItem[];
+  created_at: string;
+  updated_at: string;
+  security_note?: string;
+};

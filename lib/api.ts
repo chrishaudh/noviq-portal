@@ -1,4 +1,4 @@
-import type { AvailabilitySlot, BookingRequest, BookingResponse, Business, BusinessSettings, QuoteRequest, QuoteResponse, Service } from "@/types";
+import type { AvailabilitySlot, BookingRequest, BookingResponse, Business, BusinessSettings, PublicInvoice, QuoteRequest, QuoteResponse, Service } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV ?? "development";
@@ -75,4 +75,9 @@ export function getBusinessSettings() {
 
 export function getBusiness() {
   return request<Business>(`/businesses/${BUSINESS_ID}`);
+}
+
+
+export function getPublicInvoice(invoiceId: string) {
+  return request<PublicInvoice>(`/public/invoices/${encodeURIComponent(invoiceId)}`);
 }
