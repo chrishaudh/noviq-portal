@@ -32,7 +32,7 @@ export default function HomePage() {
               {poweredByEnabled ? <span className="block text-xs text-slate-500">Powered by Noviq</span> : null}
             </div>
           </div>
-          <Link href="/book" className="rounded border border-line bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-soft">Book</Link>
+          <div className="flex items-center gap-2"><Link href="/customer" className="rounded border border-line bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-soft">Customer Access</Link><Link href="/book" className="rounded border border-line bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-soft">Book</Link></div>
         </nav>
 
         <div className="grid gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
@@ -42,7 +42,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">{bookingSubtitle}</p>
             <div className="mt-8 grid gap-3 sm:max-w-md sm:grid-cols-2">
               <Link href="/quote" className="flex h-12 items-center justify-center rounded bg-brand px-5 text-base font-semibold text-white">Get a Quote</Link>
-              <Link href="/book" className="flex h-12 items-center justify-center rounded border border-line bg-white px-5 text-base font-semibold text-slate-800">Book Now</Link>
+              <Link href="/book" className="flex h-12 items-center justify-center rounded border border-line bg-white px-5 text-base font-semibold text-slate-800">Book Now</Link><Link href="/customer" className="flex h-12 items-center justify-center rounded border border-line bg-white px-5 text-base font-semibold text-slate-800 sm:col-span-2">Find My Booking, Quote, or Invoice</Link>
             </div>
           </div>
           <div className="rounded border border-line bg-white p-5 shadow-soft">

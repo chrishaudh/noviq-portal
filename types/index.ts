@@ -171,3 +171,46 @@ export type PublicQuote = QuoteResponse & {
   converted_booking_id?: string | null;
   business: { id: string; name: string; logo_url?: string | null; primary_color?: string | null; secondary_color?: string | null; powered_by_noviq_enabled?: boolean };
 };
+
+
+export type PublicBooking = {
+  id: string;
+  booking_ref: string;
+  customer_name?: string | null;
+  service_type?: string | null;
+  scheduled_start: string;
+  scheduled_end?: string | null;
+  duration_minutes?: number | null;
+  address?: string | null;
+  status: string;
+  ladder_required?: boolean;
+  assigned_contractor?: { first_name?: string | null; display_name?: string | null } | null;
+  business_contact: { phone?: string | null; email?: string | null };
+  business: PublicInvoice["business"];
+  invoice?: { id: string; invoice_number: string; status: string; balance_due: string | number } | null;
+  quote?: { id: string; quote_number?: string | null; status: string; estimated_price: string | number } | null;
+  notes_placeholder: string;
+  security_note?: string;
+};
+
+export type PublicLookupRecord = {
+  id: string;
+  label: string;
+  status: string;
+  href: string;
+  service_type?: string | null;
+  scheduled_start?: string | null;
+  balance_due?: string | number | null;
+};
+
+export type PublicCustomerLookup = {
+  business: PublicInvoice["business"];
+  email: string;
+  reference: string;
+  bookings: PublicLookupRecord[];
+  invoices: PublicLookupRecord[];
+  quotes: PublicLookupRecord[];
+  service_history_placeholder: string;
+  support_placeholder: string;
+  security_note?: string;
+};
