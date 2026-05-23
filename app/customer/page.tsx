@@ -2,7 +2,8 @@
 
 import { FormEvent, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { lookupCustomerRecords } from "@/lib/api";
+import { BUSINESS_ID, lookupCustomerRecords } from "@/lib/api";
+import { SupportRequestForm } from "@/components/SupportRequestForm";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { PublicCustomerLookup, PublicLookupRecord } from "@/types";
 
@@ -75,10 +76,12 @@ export default function CustomerAccessHubPage() {
 
           <section className="border-t border-line p-6">
             <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Need Help?</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <Placeholder title="Call Business" body={lookup?.business.phone || "Business phone appears after lookup when available."} />
-              <Placeholder title="Email Business" body={lookup?.business.email || "Business email appears after lookup when available."} />
-              <Placeholder title="Support Message" body="Support messaging is coming later. No message is sent from this placeholder." />
+            <div className="mt-4 grid gap-3 lg:grid-cols-[0.8fr_1.2fr]">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <Placeholder title="Call Business" body={lookup?.business.phone || "Business phone appears after lookup when available."} />
+                <Placeholder title="Email Business" body={lookup?.business.email || "Business email appears after lookup when available."} />
+              </div>
+              <SupportRequestForm businessId={lookup?.business.id || BUSINESS_ID} customerName={lookup?.email ? lookup.email.split("@")[0] : ""} email={lookup?.email || ""} defaultSubject="Customer portal support request" />
             </div>
           </section>
         </section>

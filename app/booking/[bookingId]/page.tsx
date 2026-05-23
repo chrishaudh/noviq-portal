@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { getPublicBooking } from "@/lib/api";
+import { SupportRequestForm } from "@/components/SupportRequestForm";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { PublicBooking } from "@/types";
 
@@ -92,7 +93,7 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
             <p className="mt-3 rounded bg-slate-50 p-4 text-sm leading-6 text-slate-700">{booking.notes_placeholder}</p>
           </section>
 
-          <Support business={booking.business} contact={booking.business_contact} />
+          <Support booking={booking} business={booking.business} contact={booking.business_contact} />
         </section>
 
         <footer className="py-6 text-center text-xs text-slate-500">
@@ -108,8 +109,8 @@ function CustomerNav({ booking }: { booking: PublicBooking }) {
   return <nav className="grid gap-2 border-b border-line bg-slate-50 p-4 text-sm sm:grid-cols-4"><Link href={booking.quote ? `/quote/${booking.quote.id}` : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Quotes</Link><Link href={`/booking/${booking.booking_ref}`} className="rounded border border-brand bg-white px-3 py-2 font-semibold text-brand">Bookings</Link><Link href={booking.invoice ? `/invoice/${booking.invoice.id}` : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Invoices</Link><a href="#support" className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Support</a></nav>;
 }
 
-function Support({ business, contact }: { business: PublicBooking["business"]; contact: PublicBooking["business_contact"] }) {
-  return <section id="support" className="border-t border-line p-6"><h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Need Help?</h2><div className="mt-4 grid gap-3 sm:grid-cols-3"><Placeholder title="Call" body={contact.phone || business.phone || "Business phone coming soon."} /><Placeholder title="Email" body={contact.email || business.email || "Business email coming soon."} /><Placeholder title="Support Message" body="Customer support messaging is coming later. No message is sent from this placeholder." /></div></section>;
+function Support({ booking, business, contact }: { booking: PublicBooking; business: PublicBooking["business"]; contact: PublicBooking["business_contact"] }) {
+  return <section id="support" className="border-t border-line p-6"><h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Need Help?</h2><div className="mt-4 grid gap-3 lg:grid-cols-[0.8fr_1.2fr]"><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1"><Placeholder title="Call" body={contact.phone || business.phone || "Business phone coming soon."} /><Placeholder title="Email" body={contact.email || business.email || "Business email coming soon."} /></div><SupportRequestForm businessId={business.id} customerName={booking.customer_name || ""} relatedType="booking" relatedId={booking.id} defaultRequestType="booking_question" defaultSubject={`Question about booking ${booking.booking_ref}`} /></div></section>;
 }
 
 function Shell({ children }: { children: ReactNode }) { return <div className="min-h-screen bg-slate-50 px-4 py-6 text-ink sm:px-6 lg:px-8">{children}</div>; }

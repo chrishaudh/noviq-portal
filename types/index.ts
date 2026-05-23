@@ -214,3 +214,23 @@ export type PublicCustomerLookup = {
   support_placeholder: string;
   security_note?: string;
 };
+
+export type PublicSupportRequestPayload = {
+  business_id?: string | null;
+  customer_name: string;
+  email: string;
+  phone?: string | null;
+  related_type?: string | null;
+  related_id?: string | null;
+  request_type: string;
+  subject: string;
+  message: string;
+};
+
+export type PublicSupportRequestResponse = {
+  id: string;
+  status: string;
+  priority: string;
+  message: string;
+  created_at: string;
+};

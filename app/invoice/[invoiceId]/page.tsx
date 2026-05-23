@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { getPublicInvoice } from "@/lib/api";
+import { SupportRequestForm } from "@/components/SupportRequestForm";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { PublicInvoice } from "@/types";
 
@@ -129,6 +130,17 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
           </section>
 
           {invoice.notes ? <section className="border-t border-line p-6"><h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Notes</h2><p className="mt-3 rounded bg-slate-50 p-4 text-sm leading-6 text-slate-700">{invoice.notes}</p></section> : null}
+
+          <section className="border-t border-line p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Need Help?</h2>
+            <div className="mt-4 grid gap-3 lg:grid-cols-[0.8fr_1.2fr]">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <Placeholder title="Call" body={invoice.business.phone || "Business phone coming soon."} />
+                <Placeholder title="Email" body={invoice.business.email || "Business email coming soon."} />
+              </div>
+              <SupportRequestForm businessId={invoice.business.id} customerName={invoice.customer_name || ""} email={invoice.customer_email || ""} phone={invoice.customer_phone || ""} relatedType="invoice" relatedId={invoice.id} defaultRequestType="invoice_question" defaultSubject={`Question about invoice ${invoice.invoice_number}`} />
+            </div>
+          </section>
         </section>
 
         <footer className="py-6 text-center text-xs text-slate-500">
@@ -155,3 +167,5 @@ function Detail({ label, value }: { label: string; value: string }) {
 function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "NV";
 }
+
+function Placeholder({ title, body }: { title: string; body: string }) { return <div className="rounded border border-line bg-slate-50 p-4"><p className="text-sm font-semibold text-ink">{title}</p><p className="mt-2 break-words text-sm leading-6 text-slate-600">{body}</p></div>; }

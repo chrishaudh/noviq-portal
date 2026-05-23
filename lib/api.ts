@@ -1,4 +1,4 @@
-import type { AvailabilitySlot, BookingRequest, BookingResponse, Business, BusinessSettings, PublicBooking, PublicCustomerLookup, PublicInvoice, PublicQuote, QuoteRequest, QuoteResponse, Service } from "@/types";
+import type { AvailabilitySlot, BookingRequest, BookingResponse, Business, BusinessSettings, PublicBooking, PublicCustomerLookup, PublicInvoice, PublicQuote, PublicSupportRequestPayload, PublicSupportRequestResponse, QuoteRequest, QuoteResponse, Service } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV ?? "development";
@@ -78,6 +78,14 @@ export function getBusiness() {
 }
 
 
+
+
+export function createPublicSupportRequest(payload: PublicSupportRequestPayload) {
+  return request<PublicSupportRequestResponse>("/public/support-requests", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
 
 export function getPublicBooking(bookingIdOrRef: string) {
   return request<PublicBooking>(`/public/bookings/${encodeURIComponent(bookingIdOrRef)}`);
