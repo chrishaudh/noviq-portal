@@ -71,6 +71,17 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
             </section>
 
             <section className="rounded border border-line bg-slate-50 p-4">
+              <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Deposit Payment</h2>
+              <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                <Detail label="Deposit status" value={(booking.deposit_status || "not required").replaceAll("_", " ")} />
+                <Detail label="Deposit required" value={formatCurrency(booking.deposit_required_amount ?? 0)} />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{booking.deposit_payment_link ? "A sandbox deposit payment link placeholder is available. No live payment will be processed." : "Deposit payment link not available yet."}</p>
+              {booking.deposit_payment_link ? <p className="mt-2 break-words rounded border border-line bg-white p-3 text-xs text-slate-600">{booking.deposit_payment_link}</p> : null}
+              <button className="mt-4 h-11 w-full rounded px-4 text-sm font-semibold text-white sm:w-auto" style={{ background: brand.primary }} onClick={() => booking.deposit_payment_link ? window.open(booking.deposit_payment_link, "_blank", "noopener,noreferrer") : alert("Deposit payment link not available yet.")} type="button">Pay Deposit</button>
+            </section>
+
+            <section className="rounded border border-line bg-slate-50 p-4">
               <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Related Records</h2>
               <div className="mt-4 grid gap-2">
                 {booking.invoice ? <Link href={`/invoice/${booking.invoice.id}`} className="rounded border border-line bg-white p-3 text-sm font-semibold text-ink">Invoice {booking.invoice.invoice_number}<span className="mt-1 block text-xs font-medium text-slate-500">Balance {formatCurrency(booking.invoice.balance_due)} · {booking.invoice.status.replaceAll("_", " ")}</span></Link> : <p className="rounded border border-dashed border-line bg-white p-3 text-sm text-slate-600">No invoice is linked yet.</p>}
