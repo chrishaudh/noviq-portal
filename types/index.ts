@@ -132,6 +132,7 @@ export type PublicInvoice = {
   payment_provider?: string | null;
   payment_status?: string | null;
   stripe_payment_link?: string | null;
+  stripe_checkout_session_id?: string | null;
   deposit_required_amount?: string | number;
   deposit_paid_amount?: string | number;
   deposit_balance_due?: string | number;
@@ -192,10 +193,11 @@ export type PublicBooking = {
   deposit_paid_amount?: string | number;
   deposit_payment_link?: string | null;
   deposit_payment_provider?: string | null;
+  deposit_checkout_session_id?: string | null;
   assigned_contractor?: { first_name?: string | null; display_name?: string | null } | null;
   business_contact: { phone?: string | null; email?: string | null };
   business: PublicInvoice["business"];
-  invoice?: { id: string; invoice_number: string; status: string; balance_due: string | number; payment_status?: string | null; payment_provider?: string | null; stripe_payment_link?: string | null } | null;
+  invoice?: { id: string; invoice_number: string; status: string; balance_due: string | number; payment_status?: string | null; payment_provider?: string | null; stripe_payment_link?: string | null; stripe_checkout_session_id?: string | null } | null;
   quote?: { id: string; quote_number?: string | null; status: string; estimated_price: string | number } | null;
   notes_placeholder: string;
   security_note?: string;

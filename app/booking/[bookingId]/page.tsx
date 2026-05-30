@@ -76,7 +76,7 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
                 <Detail label="Deposit status" value={(booking.deposit_status || "not required").replaceAll("_", " ")} />
                 <Detail label="Deposit required" value={formatCurrency(booking.deposit_required_amount ?? 0)} />
               </div>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{booking.deposit_payment_link ? "A sandbox deposit payment link placeholder is available. No live payment will be processed." : "Deposit payment link not available yet."}</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{booking.deposit_payment_link ? (booking.deposit_checkout_session_id?.startsWith("cs_test_") ? "A Stripe test-mode deposit checkout link is available. Use test cards only; live payments are not active." : "A sandbox deposit payment link placeholder is available. No live payment will be processed.") : "Deposit payment link not available yet."}</p>
               {booking.deposit_payment_link ? <p className="mt-2 break-words rounded border border-line bg-white p-3 text-xs text-slate-600">{booking.deposit_payment_link}</p> : null}
               <button className="mt-4 h-11 w-full rounded px-4 text-sm font-semibold text-white sm:w-auto" style={{ background: brand.primary }} onClick={() => booking.deposit_payment_link ? window.open(booking.deposit_payment_link, "_blank", "noopener,noreferrer") : alert("Deposit payment link not available yet.")} type="button">Pay Deposit</button>
             </section>
