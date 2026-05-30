@@ -58,6 +58,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
   }
 
   const depositDue = Number(invoice.deposit_balance_due ?? 0) > 0 && invoice.status !== "paid";
+  const hasRealTestCheckout = Boolean(invoice.stripe_checkout_session_id?.startsWith("cs_test_") && !invoice.stripe_checkout_session_id.includes("placeholder"));
 
   return (
     <Shell>
@@ -105,7 +106,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
 
             <section className="rounded border border-line bg-slate-50 p-4">
               <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Payment Placeholder</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{invoice.stripe_payment_link ? (invoice.stripe_checkout_session_id?.startsWith("cs_test_") ? "A Stripe test-mode checkout link is available. Use test cards only; live payments are not active." : "A sandbox payment link placeholder is available. No live payment will be processed.") : "Online payment link not available yet."}</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{invoice.stripe_payment_link ? (hasRealTestCheckout ? "A Stripe test-mode checkout link is available. Use test cards only; live payments are not active. Status may update after webhook processing." : "A sandbox payment link placeholder is available. No live payment will be processed.") : "Online payment link not available yet."}</p>
               {invoice.stripe_payment_link ? <p className="mt-2 break-words rounded border border-line bg-white p-3 text-xs text-slate-600">{invoice.stripe_payment_link}</p> : null}
               <div className="mt-4 grid gap-2">
                 {depositDue ? <button className="h-11 rounded px-4 text-sm font-semibold text-white" style={{ background: brand.primary }} onClick={() => invoice.stripe_payment_link ? window.open(invoice.stripe_payment_link, "_blank", "noopener,noreferrer") : setPaymentMessage("Online payment link not available yet.")} type="button">Pay Deposit</button> : null}
