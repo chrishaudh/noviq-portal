@@ -133,6 +133,9 @@ export type PublicInvoice = {
   payment_status?: string | null;
   stripe_payment_link?: string | null;
   stripe_checkout_session_id?: string | null;
+  public_access_token?: string | null;
+  public_access_token_expires_at?: string | null;
+  public_access_revoked_at?: string | null;
   deposit_required_amount?: string | number;
   deposit_paid_amount?: string | number;
   deposit_balance_due?: string | number;
@@ -173,6 +176,9 @@ export type PublicQuote = QuoteResponse & {
   approved_at?: string | null;
   rejected_at?: string | null;
   converted_booking_id?: string | null;
+  public_access_token?: string | null;
+  public_access_token_expires_at?: string | null;
+  public_access_revoked_at?: string | null;
   business: { id: string; name: string; logo_url?: string | null; primary_color?: string | null; secondary_color?: string | null; powered_by_noviq_enabled?: boolean };
 };
 
@@ -194,11 +200,14 @@ export type PublicBooking = {
   deposit_payment_link?: string | null;
   deposit_payment_provider?: string | null;
   deposit_checkout_session_id?: string | null;
+  public_access_token?: string | null;
+  public_access_token_expires_at?: string | null;
+  public_access_revoked_at?: string | null;
   assigned_contractor?: { first_name?: string | null; display_name?: string | null } | null;
   business_contact: { phone?: string | null; email?: string | null };
   business: PublicInvoice["business"];
-  invoice?: { id: string; invoice_number: string; status: string; balance_due: string | number; payment_status?: string | null; payment_provider?: string | null; stripe_payment_link?: string | null; stripe_checkout_session_id?: string | null } | null;
-  quote?: { id: string; quote_number?: string | null; status: string; estimated_price: string | number } | null;
+  invoice?: { id: string; invoice_number: string; status: string; balance_due: string | number; payment_status?: string | null; payment_provider?: string | null; stripe_payment_link?: string | null; stripe_checkout_session_id?: string | null; public_access_token?: string | null } | null;
+  quote?: { id: string; quote_number?: string | null; status: string; estimated_price: string | number; public_access_token?: string | null } | null;
   notes_placeholder: string;
   security_note?: string;
 };

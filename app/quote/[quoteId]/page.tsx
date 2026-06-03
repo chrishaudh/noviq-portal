@@ -7,15 +7,16 @@ import { SupportRequestForm } from "@/components/SupportRequestForm";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { PublicQuote } from "@/types";
 
-export default function PublicQuotePage({ params }: { params: { quoteId: string } }) {
+export default function PublicQuotePage({ params, searchParams }: { params: { quoteId: string }; searchParams?: { token?: string } }) {
+  const accessToken = searchParams?.token ?? null;
   const [quote, setQuote] = useState<PublicQuote | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const brand = useMemo(() => ({ primary: quote?.business.primary_color || "#0f766e", secondary: quote?.business.secondary_color || "#0f172a" }), [quote]);
 
-  useEffect(() => { let alive = true; getPublicQuote(params.quoteId).then((data) => { if (alive) setQuote(data); }).catch((err) => { if (alive) setError(err instanceof Error ? err.message : "Could not load quote."); }).finally(() => { if (alive) setIsLoading(false); }); return () => { alive = false; }; }, [params.quoteId]);
-  async function act(kind: "approve" | "reject") { try { const updated = kind === "approve" ? await approvePublicQuote(params.quoteId) : await rejectPublicQuote(params.quoteId); setQuote(updated); setMessage(kind === "approve" ? "Quote approved. The team has been notified." : "Quote rejected. The team has been notified."); } catch (err) { setMessage(err instanceof Error ? err.message : "Could not update quote."); } }
+  useEffect(() => { let alive = true; getPublicQuote(params.quoteId, accessToken).then((data) => { if (alive) setQuote(data); }).catch((err) => { if (alive) setError(err instanceof Error ? err.message : "Could not load quote."); }).finally(() => { if (alive) setIsLoading(false); }); return () => { alive = false; }; }, [params.quoteId, accessToken]);
+  async function act(kind: "approve" | "reject") { try { const updated = kind === "approve" ? await approvePublicQuote(params.quoteId, accessToken) : await rejectPublicQuote(params.quoteId, accessToken); setQuote(updated); setMessage(kind === "approve" ? "Quote approved. The team has been notified." : "Quote rejected. The team has been notified."); } catch (err) { setMessage(err instanceof Error ? err.message : "Could not update quote."); } }
 
   if (isLoading) return <Shell><Panel><p>Loading quote...</p></Panel></Shell>;
   if (error || !quote) return <Shell><Panel><p className="font-semibold text-ink">Quote unavailable</p><p className="mt-2 text-sm text-slate-600">{error || "We could not find this quote."}</p><Link href="/" className="mt-4 inline-flex rounded border border-line px-4 py-2 text-sm">Return to portal</Link></Panel></Shell>;

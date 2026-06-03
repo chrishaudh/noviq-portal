@@ -9,9 +9,11 @@ import type { PublicInvoice } from "@/types";
 
 type InvoicePageProps = {
   params: { invoiceId: string };
+  searchParams?: { token?: string };
 };
 
-export default function PublicInvoicePage({ params }: InvoicePageProps) {
+export default function PublicInvoicePage({ params, searchParams }: InvoicePageProps) {
+  const accessToken = searchParams?.token ?? null;
   const [invoice, setInvoice] = useState<PublicInvoice | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
     let isMounted = true;
     setIsLoading(true);
     setError(null);
-    getPublicInvoice(params.invoiceId)
+    getPublicInvoice(params.invoiceId, accessToken)
       .then((data) => {
         if (isMounted) setInvoice(data);
       })
@@ -34,7 +36,7 @@ export default function PublicInvoicePage({ params }: InvoicePageProps) {
     return () => {
       isMounted = false;
     };
-  }, [params.invoiceId]);
+  }, [params.invoiceId, accessToken]);
 
   const brand = useMemo(() => ({
     primary: invoice?.business.primary_color || "#0f766e",

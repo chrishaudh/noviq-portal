@@ -37,6 +37,12 @@ function friendlyApiMessage(detail: unknown, fallback: string) {
   return fallback;
 }
 
+function tokenQuery(token?: string | null) {
+  if (!token) return "";
+  const search = new URLSearchParams({ token });
+  return `?${search.toString()}`;
+}
+
 export function createQuoteRequest(payload: QuoteRequest) {
   return request<QuoteResponse>("/quote-requests", {
     method: "POST",
@@ -87,8 +93,12 @@ export function createPublicSupportRequest(payload: PublicSupportRequestPayload)
   });
 }
 
-export function getPublicBooking(bookingIdOrRef: string) {
-  return request<PublicBooking>(`/public/bookings/${encodeURIComponent(bookingIdOrRef)}`);
+export function getPublicBooking(bookingIdOrRef: string, token?: string | null) {
+  return request<PublicBooking>(`/public/bookings/${encodeURIComponent(bookingIdOrRef)}${tokenQuery(token)}`);
+}
+
+export function getPublicBookingByToken(token: string) {
+  return request<PublicBooking>(`/public/bookings/token/${encodeURIComponent(token)}`);
 }
 
 export function lookupCustomerRecords(params: { email: string; reference: string; business_id?: string }) {
@@ -100,18 +110,26 @@ export function lookupCustomerRecords(params: { email: string; reference: string
   return request<PublicCustomerLookup>(`/public/customers/lookup?${search.toString()}`);
 }
 
-export function getPublicInvoice(invoiceId: string) {
-  return request<PublicInvoice>(`/public/invoices/${encodeURIComponent(invoiceId)}`);
+export function getPublicInvoice(invoiceId: string, token?: string | null) {
+  return request<PublicInvoice>(`/public/invoices/${encodeURIComponent(invoiceId)}${tokenQuery(token)}`);
 }
 
-export function getPublicQuote(quoteId: string) {
-  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}`);
+export function getPublicInvoiceByToken(token: string) {
+  return request<PublicInvoice>(`/public/invoices/token/${encodeURIComponent(token)}`);
 }
 
-export function approvePublicQuote(quoteId: string) {
-  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}/approve`, { method: "POST" });
+export function getPublicQuote(quoteId: string, token?: string | null) {
+  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}${tokenQuery(token)}`);
 }
 
-export function rejectPublicQuote(quoteId: string) {
-  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}/reject`, { method: "POST" });
+export function getPublicQuoteByToken(token: string) {
+  return request<PublicQuote>(`/public/quotes/token/${encodeURIComponent(token)}`);
+}
+
+export function approvePublicQuote(quoteId: string, token?: string | null) {
+  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}/approve${tokenQuery(token)}`, { method: "POST" });
+}
+
+export function rejectPublicQuote(quoteId: string, token?: string | null) {
+  return request<PublicQuote>(`/public/quotes/${encodeURIComponent(quoteId)}/reject${tokenQuery(token)}`, { method: "POST" });
 }

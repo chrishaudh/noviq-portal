@@ -7,7 +7,8 @@ import { SupportRequestForm } from "@/components/SupportRequestForm";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { PublicBooking } from "@/types";
 
-export default function PublicBookingPage({ params }: { params: { bookingId: string } }) {
+export default function PublicBookingPage({ params, searchParams }: { params: { bookingId: string }; searchParams?: { token?: string } }) {
+  const accessToken = searchParams?.token ?? null;
   const [booking, setBooking] = useState<PublicBooking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,12 +18,12 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
     let alive = true;
     setIsLoading(true);
     setError(null);
-    getPublicBooking(params.bookingId)
+    getPublicBooking(params.bookingId, accessToken)
       .then((data) => { if (alive) setBooking(data); })
       .catch((err) => { if (alive) setError(err instanceof Error ? err.message : "Could not load booking."); })
       .finally(() => { if (alive) setIsLoading(false); });
     return () => { alive = false; };
-  }, [params.bookingId]);
+  }, [params.bookingId, accessToken]);
 
   if (isLoading) return <Shell><Panel><p className="text-sm font-medium text-slate-600">Loading booking...</p></Panel></Shell>;
   if (error || !booking) return <Shell><Panel><p className="text-lg font-semibold text-ink">Booking unavailable</p><p className="mt-2 text-sm text-slate-600">{error || "We could not find this booking."}</p><Link href="/customer" className="mt-4 inline-flex h-10 items-center rounded border border-line px-4 text-sm font-semibold text-slate-700">Go to customer access</Link></Panel></Shell>;
@@ -85,8 +86,8 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
             <section className="rounded border border-line bg-slate-50 p-4">
               <h2 className="text-sm font-semibold uppercase tracking-normal text-slate-500">Related Records</h2>
               <div className="mt-4 grid gap-2">
-                {booking.invoice ? <Link href={`/invoice/${booking.invoice.id}`} className="rounded border border-line bg-white p-3 text-sm font-semibold text-ink">Invoice {booking.invoice.invoice_number}<span className="mt-1 block text-xs font-medium text-slate-500">Balance {formatCurrency(booking.invoice.balance_due)} · {booking.invoice.status.replaceAll("_", " ")}</span></Link> : <p className="rounded border border-dashed border-line bg-white p-3 text-sm text-slate-600">No invoice is linked yet.</p>}
-                {booking.quote ? <Link href={`/quote/${booking.quote.id}`} className="rounded border border-line bg-white p-3 text-sm font-semibold text-ink">Quote {booking.quote.quote_number || booking.quote.id}<span className="mt-1 block text-xs font-medium text-slate-500">{formatCurrency(booking.quote.estimated_price)} · {booking.quote.status.replaceAll("_", " ")}</span></Link> : <p className="rounded border border-dashed border-line bg-white p-3 text-sm text-slate-600">No quote is linked yet.</p>}
+                {booking.invoice ? <Link href={portalHref("invoice", booking.invoice.id, booking.invoice.public_access_token)} className="rounded border border-line bg-white p-3 text-sm font-semibold text-ink">Invoice {booking.invoice.invoice_number}<span className="mt-1 block text-xs font-medium text-slate-500">Balance {formatCurrency(booking.invoice.balance_due)} · {booking.invoice.status.replaceAll("_", " ")}</span></Link> : <p className="rounded border border-dashed border-line bg-white p-3 text-sm text-slate-600">No invoice is linked yet.</p>}
+                {booking.quote ? <Link href={portalHref("quote", booking.quote.id, booking.quote.public_access_token)} className="rounded border border-line bg-white p-3 text-sm font-semibold text-ink">Quote {booking.quote.quote_number || booking.quote.id}<span className="mt-1 block text-xs font-medium text-slate-500">{formatCurrency(booking.quote.estimated_price)} · {booking.quote.status.replaceAll("_", " ")}</span></Link> : <p className="rounded border border-dashed border-line bg-white p-3 text-sm text-slate-600">No quote is linked yet.</p>}
               </div>
             </section>
           </div>
@@ -118,7 +119,7 @@ export default function PublicBookingPage({ params }: { params: { bookingId: str
 }
 
 function CustomerNav({ booking }: { booking: PublicBooking }) {
-  return <nav className="grid gap-2 border-b border-line bg-slate-50 p-4 text-sm sm:grid-cols-4"><Link href={booking.quote ? `/quote/${booking.quote.id}` : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Quotes</Link><Link href={`/booking/${booking.booking_ref}`} className="rounded border border-brand bg-white px-3 py-2 font-semibold text-brand">Bookings</Link><Link href={booking.invoice ? `/invoice/${booking.invoice.id}` : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Invoices</Link><a href="#support" className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Support</a></nav>;
+  return <nav className="grid gap-2 border-b border-line bg-slate-50 p-4 text-sm sm:grid-cols-4"><Link href={booking.quote ? portalHref("quote", booking.quote.id, booking.quote.public_access_token) : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Quotes</Link><Link href={portalHref("booking", booking.id, booking.public_access_token)} className="rounded border border-brand bg-white px-3 py-2 font-semibold text-brand">Bookings</Link><Link href={booking.invoice ? portalHref("invoice", booking.invoice.id, booking.invoice.public_access_token) : "/customer"} className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Invoices</Link><a href="#support" className="rounded border border-line bg-white px-3 py-2 font-semibold text-slate-700">Support</a></nav>;
 }
 
 function Support({ booking, business, contact }: { booking: PublicBooking; business: PublicBooking["business"]; contact: PublicBooking["business_contact"] }) {
@@ -131,3 +132,7 @@ function Metric({ label, value, strong = false }: { label: string; value: string
 function Detail({ label, value }: { label: string; value: string }) { return <div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-normal text-slate-500">{label}</p><p className="mt-1 break-words text-sm font-medium text-ink">{value}</p></div>; }
 function Placeholder({ title, body }: { title: string; body: string }) { return <div className="rounded border border-line bg-slate-50 p-4"><p className="text-sm font-semibold text-ink">{title}</p><p className="mt-2 break-words text-sm leading-6 text-slate-600">{body}</p></div>; }
 function initials(name: string) { return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "NV"; }
+function portalHref(kind: "booking" | "invoice" | "quote", id: string, token?: string | null) {
+  const base = `/${kind}/${encodeURIComponent(id)}`;
+  return token ? `${base}?token=${encodeURIComponent(token)}` : base;
+}

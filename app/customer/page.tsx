@@ -101,7 +101,7 @@ function RecordGroup({ title, kind, records, empty }: { title: string; kind: "bo
 }
 
 function RecordLink({ kind, record }: { kind: "booking" | "invoice" | "quote"; record: PublicLookupRecord }) {
-  const href = record.id ? `/${kind}/${encodeURIComponent(record.id)}` : null;
+  const href = record.href || (record.id ? `/${kind}/${encodeURIComponent(record.id)}` : null);
   const actionLabel = kind === "booking" ? "View Booking" : kind === "invoice" ? "View Invoice" : "View Quote";
   const detail = `${record.service_type ? `${record.service_type} · ` : ""}${record.scheduled_start ? `${formatDateTime(record.scheduled_start)} · ` : ""}${record.balance_due != null ? `Balance ${formatCurrency(record.balance_due)} · ` : ""}${record.status.replaceAll("_", " ")}`;
 
