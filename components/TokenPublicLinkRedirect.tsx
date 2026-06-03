@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 type TokenPublicLinkRedirectProps = {
   token: string;
@@ -11,7 +10,6 @@ type TokenPublicLinkRedirectProps = {
 };
 
 export function TokenPublicLinkRedirect({ token, kind, resolveRecord }: TokenPublicLinkRedirectProps) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ export function TokenPublicLinkRedirect({ token, kind, resolveRecord }: TokenPub
     setError(null);
     resolveRecord(token)
       .then((record) => {
-        if (isMounted) router.replace(`/${kind}/${record.id}?token=${encodeURIComponent(token)}`);
+        if (isMounted) window.location.replace(`/${kind}/${record.id}?token=${encodeURIComponent(token)}`);
       })
       .catch((caughtError) => {
         if (isMounted) setError(caughtError instanceof Error ? caughtError.message : "This customer link is unavailable.");
@@ -27,7 +25,7 @@ export function TokenPublicLinkRedirect({ token, kind, resolveRecord }: TokenPub
     return () => {
       isMounted = false;
     };
-  }, [kind, resolveRecord, router, token]);
+  }, [kind, resolveRecord, token]);
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
